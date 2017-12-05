@@ -1,0 +1,51 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <a class="btn btn-primary" href="{% url 'questionnaire_add' %}">添加</a>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>调查问卷名称</th>
+                <th>问卷调查班级</th>
+                <th>参与人数</th>
+                <th>问卷选项</th>
+                <th>调查地址</th>
+                <th>查看评分</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for questionnaire in questionnaires %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ questionnaire.caption }}</td>
+                    <td>{{ questionnaire.group.title }}</td>
+                    <td>{{ questionnaire.qroup.count }}</td>
+                    <td><a class="btn btn-primary" href="">编辑问卷</a></td>
+                    <td><a href="/student/evaluate/{{ questionnaire.id }}/{{ questionnaire.group.id }}/">/student/evaluate/{{ questionnaire.id }}/{{ questionnaire.group.id }}/</a>
+                    </td>
+                    <td><a href="">查看评分</a></td>
+                    <td><a class="btn btn-danger" href="">删除</a></td>
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

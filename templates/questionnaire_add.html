@@ -1,0 +1,53 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery-3.1.1.js' %}"></script>
+</head>
+<body>
+
+<div class="container" style="margin-top: 50px">
+
+    <form class="form-horizontal list-group" action="{% url 'questionnaire_save' %}" method="post" novalidate>{% csrf_token %}
+        <div class="">
+            <div class="btn btn-success add-question">添加</div>
+            <input class="btn btn-primary" type="submit" value="保存">
+        </div>
+
+        <div  class="list-group-item" id="item-one">
+            <p><span>问题</span> <span class="glyphicon glyphicon-remove pull-right remove_item"></span></p>
+            {% for filed in question_form %}
+                <div class="form-group">
+                <label for="{{ filed.id_for_label }}" class="col-md-2 col-sm-2 control-label">{{ filed.label }}:</label>
+                <div class="col-md-6 col-sm-10 ">
+                    {{ filed }}
+                </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+    $(".add-question").click(function () {
+        $(".list-group").append(
+            '<div class="form-group list-group-item">' +
+            $("#item-one").html() + '</div>'
+        );
+    });
+
+   $(".list-group").on("click",".list-group-item .remove_item",function(){
+    $(this).parent().parent().remove();
+});
+
+</script>
+</body>
+</html>

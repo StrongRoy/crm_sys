@@ -1,0 +1,158 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery-3.1.1.js' %}"></script>
+    <style>
+        ol {
+            padding: 0;
+            list-style: none;
+            counter-reset: sectioncounter
+        }
+
+        ol > li:before {
+            content: '问题' counter(sectioncounter) ':';
+            counter-increment: sectioncounter;
+            font-size: 18px;
+            color: #d4d4d4;
+        }
+
+        ol > li:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<div class="container" style="margin-top: 50px">
+    <form class="form-horizontal" action="{% url 'questionnaire_save' %}" method="post"
+          novalidate>{% csrf_token %}
+
+        <div class="btn btn-success add-question">添加</div>
+        <input class="btn btn-primary pull-right" type="submit" value=" 保存 ">
+
+        <br><br>
+
+        {% for filed in questionnaire_form %}
+            <div class="form-group">
+                <label for="{{ filed.id_for_label }}"
+                       class="col-sm-1 control-label">{{ filed.label }}</label>
+                <div class="col-sm-11">
+                    {{ filed }}
+                </div>
+            </div>
+        {% endfor %}
+        <ol class="list-group">
+            {% for item in form_list %}
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-remove pull-right remove_item" id="{{ item.obj.id }}"
+                          onclick="QuestionRemove({{ item.obj.id }})"></span>
+                    {% for filed in item.form %}
+                        <div id="{{ item.obj.id }}" class="form-group">
+                            <label for="{{ filed.id_for_label }}"
+                                   class="col-md-2 col-sm-2 control-label">{{ filed.label }}:</label>
+                            <div class="col-md-10 col-sm-10 content">
+                                {{ filed }}
+
+                                {% ifequal filed.name 'q_type' %}
+                                    <label for="id_q_type"
+                                           class="glyphicon glyphicon-plus add-option {{ item.option_class }}"
+                                           style="color: #2b669a">添加选项</label>
+                                    <div style="margin-top: 15px;width: 60%"
+                                         class="content-option inline-group {{ item.option_class }}">
+
+                                        {% for v in item.options %}
+                                            <div id="{{ v.obj.id }}" class="list-group-item">
+
+                                                {% for option_filed in v.form %}
+                                                    <label for="{{ option_filed.id_for_label }}"
+                                                           class=" control-label">{{ option_filed.label }}:</label>
+                                                    {{ option_filed }}
+                                                    {% ifequal option_filed.name 'score' %}
+                                                        <label for="id_score"
+                                                               class="control-label glyphicon glyphicon-remove remove-option-item"></label>
+                                                    {% endifequal %}
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% if item.obj.option_count %}
+                                        <input id="option_count" type="text" hidden name="option_count" value="{{ item.obj.option_count }}">
+                                    {% else %}
+                                        <input id="option_count" type="text" hidden name="option_count" value="1">
+                                    {% endif %}
+                                {% endifequal %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+
+                </li>
+            {% endfor %}
+        </ol>
+
+    </form>
+</div>
+
+<script>
+
+    $(".form-horizontal .add-question").click(function () {
+        $(".form-horizontal ol.list-group").append('<li class="list-group-item"><span class="glyphicon glyphicon-remove pull-right remove_item" id="" onclick="QuestionRemove()"></span>\n' +
+            '<div id="" class="form-group"><label for="id_title" class="col-md-2 col-sm-2 control-label">题目:</label>\n' +
+            '<div class="col-md-10 col-sm-10 content">\n' +
+            '<input type="text" name="title" class="form-control" style="width:60%" placeholder="请输入题目" autofocus="" maxlength="64" required="" id="id_title">\n' +
+            '</div></div><div id="" class="form-group"><label for="id_q_type" class="col-md-2 col-sm-2 control-label">类型:</label>\n' +
+            '<div class="col-md-10 col-sm-10 content">\n' +
+            '<select name="q_type" class="form-control selector" style="width:50%;display: inline;" required="" id="id_q_type">\n' +
+            '<option value="" selected="">---------</option>\n' +
+            '<option value="1">单选</option><option value="2">建议</option><option value="3">打分(1~10分)</option>\n' +
+            '</select><label for="id_q_type" class="glyphicon glyphicon-plus add-option hidden" style="color: #2b669a">添加选项</label>\n' +
+            '<div style="margin-top: 15px;width: 60%" class="content-option inline-group hidden">\n' +
+            '<div id="" class="list-group-item"><label for="id_content" class=" control-label">内容:</label>\n' +
+            '<input type="text" name="content" class="form-control" style="width:30%;display: inline;" maxlength="64" required="" id="id_content">\n' +
+            '<label for="id_score" class=" control-label">分值:</label>\n' +
+            '<input type="number" name="score" class="form-control" style="width:30%;display: inline;" required="" id="id_score">\n' +
+            '<label for="id_score" class="control-label glyphicon glyphicon-remove remove-option-item"></label>\n' +
+            '</div></div></div></div></li>')
+    });
+
+    $("ol.list-group").on("click", ".list-group-item span", function () {
+        $(this).parent().remove();
+    }).on("click", ".list-group-item .remove-option-item", function () {
+        var new_value = parseInt($(this).parent().parent().next().val())-1;
+        $(this).parent().parent().next().val(new_value);
+        $(this).parent().remove();
+    }).on('click', '.list-group-item .form-group .add-option', function () {
+        $(this).next().next().val(parseInt($(this).next().next().val()) + 1);
+        $(this).next().append(
+            '<div class="list-group-item">\n' +
+            ' <label for="id_content" class=" control-label">内容:</label>\n' +
+            '<input type="text" name="content"  class="form-control" style="width:30%;display: inline;" maxlength="64" required="" id="id_content">\n' +
+            '<label for="id_score" class=" control-label">分值:</label>\n' +
+            '<input type="number" name="score"  class="form-control" style="width:30%;display: inline;" required id="id_score">\n' +
+            '<label for="id_score" class="control-label glyphicon glyphicon-remove remove-option-item"></label>\n' +
+            '</div>'
+        )
+    }).on("change", '.list-group-item .form-group .selector', function () {
+        if ("1" === $(this).children('option:selected').val()) {
+            $(this).next().removeClass('hidden');
+            $(this).next().next().removeClass('hidden');
+        } else {
+            $(this).next().addClass('hidden');
+            $(this).next().next().addClass('hidden');
+        }
+    });
+
+    function QuestionRemove(id) {
+        $.ajax(
+
+        )
+    }
+</script>
+</body>
+</html>

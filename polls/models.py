@@ -20,6 +20,10 @@ class StudentGroup(models.Model):
     count = models.IntegerField('班级人数')
 
 
+    def __str__(self):
+        return self.title
+
+
 class Student(models.Model):
     """
     学生
@@ -30,19 +34,20 @@ class Student(models.Model):
 
 
 class Questionnaire(models.Model):
-    caption = models.CharField(max_length=64)
+    caption = models.CharField('问卷名称',max_length=64)
     user = models.ForeignKey(to=UserInfo, verbose_name='创建问卷的用户')
     group = models.ForeignKey(to=StudentGroup, verbose_name='学生班级')
 
 
-class Question(models.Model):
-    title = models.CharField('问题',max_length=64)
-    q_type = models.IntegerField('类型',choices=((1, '单选'), (2, '建议'), (3, '打分(1~10分)'),))
 
+class Question(models.Model):
+    title = models.CharField('题目',max_length=64)
+    q_type = models.IntegerField('类型',choices=((1, '单选'), (2, '建议'), (3, '打分(1~10分)'),))
+    questionnaire = models.ForeignKey(to=Questionnaire,verbose_name='问卷')
 
 class RadioQuestion(models.Model):
-    content = models.CharField(max_length=64)
-    score = models.IntegerField()
+    content = models.CharField('内容',max_length=64)
+    score = models.IntegerField('分值')
     question = models.ForeignKey(to=Question,verbose_name='问题')
 
 class Answer(models.Model):

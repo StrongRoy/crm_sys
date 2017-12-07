@@ -1,7 +1,7 @@
 # encoding:utf-8
 # Author:Richie
 # Date:12/4/2017
-from django.forms import ModelForm,Textarea,Select,TextInput,NumberInput
+from django.forms import ModelForm,Select,TextInput,NumberInput
 from .models import Question,RadioQuestion,Questionnaire
 
 
@@ -20,7 +20,7 @@ class QuestionForm(ModelForm):
         model = Question
         fields = ['title','q_type']
         widgets = {
-            'title': TextInput(attrs={'class':'form-control','style':'width:60%','placeholder':'请输入题目','autofocus':''}),
+            'title': TextInput(attrs={'class':'form-control','style':'width:60%','placeholder':'请输入题目'}),
             'q_type': Select(attrs={'class': 'form-control selector','style':'width:50%;display: inline;'}),
         }
 

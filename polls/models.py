@@ -43,12 +43,12 @@ class Questionnaire(models.Model):
 class Question(models.Model):
     title = models.CharField('题目',max_length=64)
     q_type = models.IntegerField('类型',choices=((1, '单选'), (2, '建议'), (3, '打分(1~10分)'),))
-    questionnaire = models.ForeignKey(to=Questionnaire,verbose_name='问卷')
+    questionnaire = models.ManyToManyField(to=Questionnaire,verbose_name='问卷')
 
 class RadioQuestion(models.Model):
     content = models.CharField('内容',max_length=64)
     score = models.IntegerField('分值')
-    question = models.ForeignKey(to=Question,verbose_name='问题')
+    question = models.ManyToManyField(to=Question,verbose_name='问题')
 
 class Answer(models.Model):
     """

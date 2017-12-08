@@ -98,23 +98,44 @@
 
     $(".form-horizontal .add-question").click(function () {
         $(".form-horizontal ol.list-group").append(
-            '<li class="list-group-item"><span class="glyphicon glyphicon-remove pull-right remove_item" onclick="QuestionRemove()"></span>\n' +
-            '<div class="form-group"><label for="id_title" class="col-md-2 col-sm-2 control-label">题目:</label>\n' +
-            '<div class="col-md-10 col-sm-10 content">\n' +
-            '<input type="text" name="title" class="form-control" style="width:60%" placeholder="请输入题目" autofocus="" maxlength="64" required="" id="id_title">\n' +
-            '</div></div><div  class="form-group"><label for="id_q_type" class="col-md-2 col-sm-2 control-label">类型:</label>\n' +
-            '<div class="col-md-10 col-sm-10 content">\n' +
-            '<select name="q_type" class="form-control selector" style="width:50%;display: inline;" required="" id="id_q_type">\n' +
-            '<option value="" selected="">---------</option>\n' +
-            '<option value="1">单选</option><option value="2">建议</option><option value="3">打分(1~10分)</option>\n' +
-            '</select><label for="id_q_type" class="glyphicon glyphicon-plus add-option hidden" style="color: #2b669a">添加选项</label>\n' +
-            '<div style="margin-top: 15px;width: 60%" class="content-option inline-group hidden">\n' +
-            '<div class="list-group-item"><label for="id_content" class=" control-label">内容:</label>\n' +
-            '<input type="text" name="content" class="form-control" style="width:30%;display: inline;" maxlength="64" required="" id="id_content">\n' +
-            '<label for="id_score" class=" control-label">分值:</label>\n' +
-            '<input type="number" name="score" class="form-control" style="width:30%;display: inline;" required="" id="id_score">\n' +
-            '<label for="id_score" class="control-label glyphicon glyphicon-remove remove-option-item"></label>\n' +
-            '</div></div></div></div></li>')
+            '<li class="list-group-item">\n' +
+            '<span class="glyphicon glyphicon-remove pull-right remove_item"></span>\n' +
+            '<div id="" class="form-group">\n' +
+            '<label for="id_title" class="col-md-2 col-sm-2 control-label">题目:</label>\n' +
+            ' <div class="col-md-10 col-sm-10 content">\n' +
+            '<input type="text" name="title" class="form-control" style="width:60%" placeholder="请输入题目" maxlength="64" required="" id="id_title">\n' +
+            '\n' +
+            '                                \n' +
+            '                            </div>\n' +
+            '                        </div>\n' +
+            '                    \n' +
+            '                        <div id="" class="form-group">\n' +
+            '                            <label for="id_q_type" class="col-md-2 col-sm-2 control-label">类型:</label>\n' +
+            '                            <div class="col-md-10 col-sm-10 content">\n' +
+            '                                <select name="q_type" class="form-control selector" style="width:50%;display: inline;" required="" id="id_q_type">\n' +
+            '  <option value="" selected="">---------</option>\n' +
+            '\n' +
+            '  <option value="1">单选</option>\n' +
+            '\n' +
+            '  <option value="2">建议</option>\n' +
+            '\n' +
+            '  <option value="3">打分(1~10分)</option>\n' +
+            '\n' +
+            '</select>\n' +
+            '\n' +
+            '                                \n' +
+            '                                    <label for="id_q_type" class="glyphicon glyphicon-plus add-option hidden" style="color: #2b669a">添加选项</label>\n' +
+            '                                    <div style="margin-top: 15px;width: 60%" class="content-option inline-group hidden">\n' +
+            '\n' +
+            '                                        \n' +
+            '                                    </div>\n' +
+            '                                \n' +
+            '                            </div>\n' +
+            '                        </div>\n' +
+            '                    \n' +
+            '\n' +
+            '\n' +
+            '                </li>')
     });
 
     $("ol.list-group").on("click", ".list-group-item span", function () {
@@ -122,7 +143,7 @@
     }).on("click", ".list-group-item .remove-option-item", function () {
         $(this).parent().remove();
     }).on('click', '.list-group-item .form-group .add-option', function () {
-        $(this).next().append('<div class="list-group-item">\n' +
+        $(this).next().append('<div id="" class="list-group-item">\n' +
             ' <label for="id_content" class="control-label">内容:</label>\n' +
             '<input type="text" name="content"  class="form-control" style="width:30%;display: inline;" maxlength="64" required="" id="id_content">\n' +
             '<label for="id_score" class=" control-label">分值:</label>\n' +
@@ -163,7 +184,7 @@
         });
 
         $.ajax({
-            url: "{% url 'questionnaire_save' %}",
+            url: "{% url 'que_add_save' 'save' %}",
             type: "post",
             dataType: "json",
             data: {
@@ -174,9 +195,9 @@
             },
             success: function (data) {
                 if (data && (data.status === "success")) {
-                    alert('保存成功')
+                    alert(data.done+'成功')
                 } else {
-                    alert('保存失败')
+                    alert('保存失败'+'\n'+data.message)
                 }
             }
         });

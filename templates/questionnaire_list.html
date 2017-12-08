@@ -11,7 +11,7 @@
 <body>
 
 <div class="container">
-    <a class="btn btn-primary" href="{% url 'que_add' 'add' %}">添加</a>
+    <a class="btn btn-primary" href="{% url 'que_add_save' 'add' %}">添加</a>
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -32,7 +32,7 @@
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ questionnaire.caption }}</td>
                     <td>{{ questionnaire.group.title }}</td>
-                    <td>{{ questionnaire.answer_count }}/{{ questionnaire.group.count }}</td>
+                    <td>{{ questionnaire.count }}/{{ questionnaire.group.count }}</td>
                     <td><a class="btn btn-primary" href="{% url 'que_delete_edit' 'edit' questionnaire.id %}">编辑问卷</a></td>
                     <td><a href="/student/evaluate/{{ questionnaire.id }}/{{ questionnaire.group.id }}/">/student/evaluate/{{ questionnaire.id }}/{{ questionnaire.group.id }}/</a>
                     </td>

@@ -14,7 +14,6 @@ class QuestionnaireForm(ModelForm):
             'group':Select(attrs={'class': 'form-control selector','style':'width:50%;display: inline;'}),
         }
 
-
 class QuestionForm(ModelForm):
     class Meta:
         model = Question
@@ -32,4 +31,5 @@ class RadioQuestionForm(ModelForm):
             'content': TextInput(attrs={'class': 'form-control', 'style':'width:30%;display: inline;'}),
             'score': NumberInput(attrs={'class': 'form-control','style':'width:30%;display: inline;', }),
         }
+
 
